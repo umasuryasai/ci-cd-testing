@@ -8,7 +8,7 @@ on:
 
 jobs:
   main:
-    name: Build and ush to push_to_registry
+    name: Build and push to registry
     runs-on: ubuntu-latest
     steps:
     - name: Login to DockerHub
@@ -23,7 +23,7 @@ jobs:
         context: ./
         file: ./others/Dockerfile
         push: true
-        tags: surya407/httpd:$(date +%s)
+        tags: surya407/test:v2
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 
