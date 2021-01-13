@@ -7,25 +7,44 @@ on:
     branches: [ master ]
 
 jobs:
-
-  build:
-    name: Build and tag the Docker Image
+  main:
+    name: Build and ush to push_to_registry
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file others/Dockerfile --tag surya407/httpd:$(date +%s)
-
-  push_to_registry:
-    name: Push Docker image to Docker Hub
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - name: Push to Docker Hub
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+            with:
+              username: ${{ secrets.DOCKERHUB_USER }}
+              password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: surya407/test
-          tag_with_ref: true
+          context: ./
+          file: ./others/Dockerfile
+          push: true
+          tags: surya407/httpd:$(date +%s)
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+  # build:
+  #   name: Build and tag the Docker Image
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Build the Docker image
+  #     run: docker build . --file others/Dockerfile --tag surya407/httpd:$(date +%s)
+
+  # push_to_registry:
+  #   name: Push Docker image to Docker Hub
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out the repo
+  #       uses: actions/checkout@v2
+  #     - name: Push to Docker Hub
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USER }}
+  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #         repository: surya407/test
+  #         tag_with_ref: true
