@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file others/Dockerfile --tag surya407/test:v2
+      run: docker build . --file others/Dockerfile --tag surya407/test:v3
     - name: Login to DockerHub
       uses: docker/login-action@v1 
       with:
@@ -30,7 +30,7 @@ jobs:
     - name: Look up images
       run: docker image ls
     - name: Push image
-      run: docker push surya407/test:v2
+      run: docker push surya407/test:v3
 
   scan:
     name: Scan the image
@@ -49,7 +49,7 @@ jobs:
       run: echo "::set-output name=test::hello"
     - id: step2
       name: Test output2
-      run: echo "::set-output name=test::world"
+      run: echo "::set-output name=test::surya"
     outputs:
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
@@ -60,7 +60,7 @@ jobs:
     needs: [build, scan]
     runs-on: ubuntu-latest
     steps:
-    - name: Deploy to $SERVER
+    - name: Deploy to Prod
       if: ${{ github.event_name == 'push' }}
       run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
     - name: Testing outputs
