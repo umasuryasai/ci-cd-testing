@@ -11,21 +11,21 @@ jobs:
     name: Build and ush to push_to_registry
     runs-on: ubuntu-latest
     steps:
-      - name: Login to DockerHub
-        uses: docker/login-action@v1 
-            with:
-              username: ${{ secrets.DOCKERHUB_USER }}
-              password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./others/Dockerfile
-          push: true
-          tags: surya407/httpd:$(date +%s)
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+    - name: Login to DockerHub
+      uses: docker/login-action@v1 
+          with:
+            username: ${{ secrets.DOCKERHUB_USER }}
+            password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        context: ./
+        file: ./others/Dockerfile
+        push: true
+        tags: surya407/httpd:$(date +%s)
+    - name: Image digest
+      run: echo ${{ steps.docker_build.outputs.digest }}
 
   # build:
   #   name: Build and tag the Docker Image
