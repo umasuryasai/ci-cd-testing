@@ -26,3 +26,4 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
         repository: surya407/test:v2
         push: true
+        tag: surya407/test:v2
