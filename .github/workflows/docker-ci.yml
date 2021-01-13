@@ -5,8 +5,8 @@ on:
     branches: [ master, main ]
     tags:
       - "v*.*.*"
-    branches-ignore:
-      - surya
+    # branches-ignore:
+    #   - surya
   pull_request:
     branches: [ master ]
 
