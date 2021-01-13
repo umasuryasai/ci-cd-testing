@@ -44,6 +44,15 @@ jobs:
       run: echo "Scan started... $NAME"
     - name: Display results
       run: echo "Scan Passed/Failed/Vulnerable... $NAME $SURNAME"
+    - id: step1
+      name: Test output1
+      run: echo "::set-output name=test::hello"
+    - id: step2
+      name: Test output2
+      run: echo "::set-output name=test::world"
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
 
   deploy:
     name: Deploy the app
@@ -54,3 +63,5 @@ jobs:
     - name: Deploy to $SERVER
       if: ${{ github.event_name == 'push' }}
       run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
+    - name: Testing outputs
+      run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
