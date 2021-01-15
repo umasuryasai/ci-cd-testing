@@ -23,7 +23,7 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v5
       name: Build & push Docker image
       with:
-        image: surya407/test:v3
+        image: surya407/test
         tags: v4
         registry: docker.io
         dockerfile: others/Dockerfile
