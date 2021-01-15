@@ -20,48 +20,57 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file others/Dockerfile --tag surya407/test:v3
-    - name: Login to DockerHub
-      uses: docker/login-action@v1 
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & push Docker image
       with:
+        image: surya407/test:v3
+        tags: v4
+        registry: docker.io
+        dockerfile: others/Dockerfile
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Look up images
-      run: docker image ls
-    - name: Push image
-      run: docker push surya407/test:v3
+  #   - name: Build the Docker image
+  #     run: docker build . --file others/Dockerfile --tag surya407/test:v3
+  #   - name: Login to DockerHub
+  #     uses: docker/login-action@v1 
+  #     with:
+  #       username: ${{ secrets.DOCKERHUB_USER }}
+  #       password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #   - name: Look up images
+  #     run: docker image ls
+  #   - name: Push image
+  #     run: docker push surya407/test:v3
 
-  scan:
-    name: Scan the image
-    env: 
-      NAME: surya
-      SURNAME: borusu
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Start scan
-      run: echo "Scan started... $NAME"
-    - name: Display results
-      run: echo "Scan Passed/Failed/Vulnerable... $NAME $SURNAME"
-    - id: step1
-      name: Test output1
-      run: echo "::set-output name=test::hello"
-    - id: step2
-      name: Test output2
-      run: echo "::set-output name=test::surya"
-    outputs:
-      output1: ${{ steps.step1.outputs.test }}
-      output2: ${{ steps.step2.outputs.test }}
+  # scan:
+  #   name: Scan the image
+  #   env: 
+  #     NAME: surya
+  #     SURNAME: borusu
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Start scan
+  #     run: echo "Scan started... $NAME"
+  #   - name: Display results
+  #     run: echo "Scan Passed/Failed/Vulnerable... $NAME $SURNAME"
+  #   - id: step1
+  #     name: Test output1
+  #     run: echo "::set-output name=test::hello"
+  #   - id: step2
+  #     name: Test output2
+  #     run: echo "::set-output name=test::surya"
+  #   outputs:
+  #     output1: ${{ steps.step1.outputs.test }}
+  #     output2: ${{ steps.step2.outputs.test }}
 
-  deploy:
-    name: Deploy the app
-    if: always() #means it always runs after jobs build and scan have completed, regardless of whether they were successful.
-    needs: [build, scan]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy to Prod
-      if: ${{ github.event_name == 'push' }}
-      run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
-    - name: Testing outputs
-      run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+  # deploy:
+  #   name: Deploy the app
+  #   if: always() #means it always runs after jobs build and scan have completed, regardless of whether they were successful.
+  #   needs: [build, scan]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Deploy to Prod
+  #     if: ${{ github.event_name == 'push' }}
+  #     run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
+  #   - name: Testing outputs
+  #     run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
