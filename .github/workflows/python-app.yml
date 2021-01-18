@@ -5,9 +5,11 @@ name: Python application
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+    - 'my-python-actions/**'
+  #   branches: [ master ]
+  # pull_request:
+  #   branches: [ master ]
 
 defaults:
   run:

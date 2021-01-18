@@ -2,13 +2,15 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master, main ]
-    tags:
-      - "v*.*.*"
-    # branches-ignore:
-    #   - surya
-  pull_request:
-    branches: [ master ]
+    paths:
+    - 'others/**'
+  #   branches: [ master, main ]
+  #   tags:
+  #     - "v*.*.*"
+  #   branches-ignore:
+  #     - surya
+  # pull_request:
+  #   branches: [ master ]
 
 env:
   SERVER: production
