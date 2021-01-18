@@ -11,14 +11,17 @@ on:
   # pull_request:
   #   branches: [ master ]
 
-defaults:
-  run:
-    working-directory: my-python-actions
+# defaults:
+#   run:
+#     working-directory: my-python-actions
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my-python-actions
 
     steps:
     - uses: actions/checkout@v2
