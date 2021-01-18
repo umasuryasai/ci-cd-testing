@@ -15,7 +15,7 @@ on:
 
 env:
   SERVER: production
-  OWNER: UMA_SURYA_SAI
+  OWNER: UMA_SURYA
 
 jobs:
   build: #JOB ID - must be unique
