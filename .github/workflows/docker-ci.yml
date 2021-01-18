@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'others/**'
+    - '.github/workflows/docker-ci.yml'
   #   branches: [ master, main ]
   #   tags:
   #     - "v*.*.*"

@@ -7,6 +7,7 @@ on:
   push:
     paths:
     - 'my-python-actions/**'
+    - '.github/workflows/python-app.yml'
   #   branches: [ master ]
   # pull_request:
   #   branches: [ master ]
