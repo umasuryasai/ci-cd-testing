@@ -35,19 +35,19 @@ jobs:
     # - name: Push image
     #   run: docker push surya407/test:v5
     - uses: mr-smithers-excellent/docker-build-push@v5
-      name: Build & push Docker image
+      name: Build & push Docker image to DokerHub
       with:
         image: surya407/test
-        tags: 0.0.1
+        tags: 0.0.2
         registry: docker.io
         dockerfile: others/Dockerfile
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - uses: mr-smithers-excellent/docker-build-push@v5
-      name: Build & push Docker image
+      name: Build & publish Docker image to GitHub Packages
       with:
-        image: ${{ secrets.MYGITHUB_USER }}/ci-cd-testing/myhttpd
-        tags: 0.0.1
+        image: umasuryasai/ci-cd-testing/myhttpd
+        tags: 0.0.2
         registry: docker.pkg.github.com
         dockerfile: others/Dockerfile
         username: ${{ secrets.MYGITHUB_USER }}
