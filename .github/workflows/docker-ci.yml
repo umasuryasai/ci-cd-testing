@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: docker/build-push-action@v2
+    - uses: docker/build-push-action@v1
       name: Build & push Docker image to DokerHub
       with:
         repository: surya407/test
@@ -34,7 +34,7 @@ jobs:
         dockerfile: others/Dockerfile
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - uses: docker/build-push-action@v2
+    - uses: docker/build-push-action@v1
       name: Build & publish Docker image to GitHub Packages
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
@@ -43,7 +43,7 @@ jobs:
         dockerfile: others/Dockerfile
         username: ${{ github.actor }}
         password: ${{ secrets.MYGITHUB_TOKEN }}
-    - uses: docker/build-push-action@v2
+    - uses: docker/build-push-action@v1
       name: Build & publish Docker image to GHCR
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
