@@ -45,6 +45,7 @@ jobs:
     #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - uses: mr-smithers-excellent/docker-build-push@v5
       name: Build & publish Docker image to GitHub Packages
+      # for ghcr, we need to enable improved-container-support in settings
       with:
         image: umasuryasai/ci-cd-testing/myhttpd
         tags: 0.0.2
