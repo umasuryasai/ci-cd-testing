@@ -23,26 +23,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file others/Dockerfile --tag surya407/test:v5
-    - name: Login to DockerHub
-      uses: docker/login-action@v1 
-      with:
-        username: ${{ secrets.DOCKERHUB_USER }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Look up images
-      run: docker image ls
-    - name: Push image
-      run: docker push surya407/test:v5
-    # - uses: mr-smithers-excellent/docker-build-push@v5
-    #   name: Build & push Docker image
+    # - name: Build the Docker image
+    #   run: docker build . --file others/Dockerfile --tag surya407/test:v5
+    # - name: Login to DockerHub
+    #   uses: docker/login-action@v1 
     #   with:
-    #     image: surya407/test
-    #     tags: v6
-    #     registry: docker.io
-    #     dockerfile: others/Dockerfile
     #     username: ${{ secrets.DOCKERHUB_USER }}
     #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    # - name: Look up images
+    #   run: docker image ls
+    # - name: Push image
+    #   run: docker push surya407/test:v5
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & push Docker image
+      with:
+        image: surya407/test
+        tags: 0.0.1
+        registry: docker.io
+        dockerfile: others/Dockerfile
+        username: ${{ secrets.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & push Docker image
+      with:
+        image: ${{ secrets.MYGITHUB_USER }}/ci-cd-testing/myhttpd
+        tags: 0.0.1
+        registry: docker.pkg.github.com
+        dockerfile: others/Dockerfile
+        username: ${{ secrets.MYGITHUB_USER }}
+        password: ${{ secrets.MYGITHUB_TOKEN }}
 
   scan:
     name: Scan the image
