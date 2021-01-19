@@ -1,6 +1,8 @@
 name: Docker Image CI
 
 on:
+  release:
+    types: [published]
   push:
     paths:
     - 'others/**'
@@ -44,15 +46,24 @@ jobs:
     #     username: ${{ secrets.DOCKERHUB_USER }}
     #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - uses: mr-smithers-excellent/docker-build-push@v5
-      name: Build & publish Docker image to GitHub Packages
-      # for ghcr, we need to enable improved-container-support in settings
+      name: Build & publish Docker image to GHCR
       with:
         image: umasuryasai/ci-cd-testing/myhttpd
         tags: 0.0.2
-        registry: ghcr.io #docker.pkg.github.com
+        registry: docker.pkg.github.com
         dockerfile: others/Dockerfile
-        username: ${{ secrets.MYGITHUB_USER }}
+        username: ${{ github.actor }}
         password: ${{ secrets.MYGITHUB_TOKEN }}
+    # - uses: mr-smithers-excellent/docker-build-push@v5
+    #   name: Build & publish Docker image to GHCR
+    #   # for ghcr, we need to enable improved-container-support in settings
+    #   with:
+    #     image: umasuryasai/ci-cd-testing/myhttpd
+    #     tags: 0.0.2
+    #     registry: ghcr.io #docker.pkg.github.com
+    #     dockerfile: others/Dockerfile
+    #     username: ${{ secrets.MYGITHUB_USER }}
+    #     password: ${{ secrets.MYGITHUB_TOKEN }}
 
   scan:
     name: Scan the image
