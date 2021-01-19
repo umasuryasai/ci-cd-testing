@@ -45,8 +45,8 @@ jobs:
     #     dockerfile: others/Dockerfile
     #     username: ${{ secrets.DOCKERHUB_USER }}
     #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - uses: mr-smithers-excellent/docker-build-push@v5
-      name: Build & publish Docker image to GHCR
+    - uses: docker/build-push-action@v1
+      name: Build & publish Docker image to GitHub Packages
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
         tags: 0.0.2
