@@ -46,7 +46,7 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v5
       name: Build & publish Docker image to GitHub Packages
       with:
-        image: ci-cd-testing/myhttpd
+        image: umasuryasai/ci-cd-testing/myhttpd
         tags: 0.0.2
         registry: ghcr.io #docker.pkg.github.com
         dockerfile: others/Dockerfile
