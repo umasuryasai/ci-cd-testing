@@ -36,15 +36,15 @@ jobs:
     #   run: docker image ls
     # - name: Push image
     #   run: docker push surya407/test:v5
-    # - uses: mr-smithers-excellent/docker-build-push@v5
-    #   name: Build & push Docker image to DokerHub
-    #   with:
-    #     image: surya407/test
-    #     tags: 0.0.2
-    #     registry: docker.io
-    #     dockerfile: others/Dockerfile
-    #     username: ${{ secrets.DOCKERHUB_USER }}
-    #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - uses: docker/build-push-action@v1
+      name: Build & push Docker image to DokerHub
+      with:
+        repository: surya407/test
+        tags: 0.0.2
+        registry: docker.io
+        dockerfile: others/Dockerfile
+        username: ${{ secrets.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
     # - uses: docker/build-push-action@v1
     #   name: Build & publish Docker image to GitHub Packages
     #   with:
@@ -54,15 +54,15 @@ jobs:
     #     dockerfile: others/Dockerfile
     #     username: ${{ github.actor }}
     #     password: ${{ secrets.MYGITHUB_TOKEN }}
-    - uses: docker/build-push-action@v1
-      name: Build & publish Docker image to GHCR
-      with:
-        repository: umasuryasai/ci-cd-testing/myhttpd
-        tags: 0.0.3
-        registry: ghcr.io
-        dockerfile: others/Dockerfile
-        username: ${{ github.actor }}
-        password: ${{ secrets.MYGITHUB_TOKEN }}
+    # - uses: docker/build-push-action@v1
+    #   name: Build & publish Docker image to GHCR
+    #   with:
+    #     repository: umasuryasai/ci-cd-testing/myhttpd
+    #     tags: 0.0.3
+    #     registry: ghcr.io
+    #     dockerfile: others/Dockerfile
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.MYGITHUB_TOKEN }}
     # - uses: mr-smithers-excellent/docker-build-push@v5
     #   name: Build & publish Docker image to GHCR
     #   # for ghcr, we need to enable improved-container-support in settings
