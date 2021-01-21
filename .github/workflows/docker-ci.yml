@@ -30,7 +30,7 @@ jobs:
       name: Build & push Docker image to DokerHub
       with:
         repository: surya407/test
-        tags: ${APP_VERSION}
+        tags: ${{ env.APP_VERSION }}
         registry: docker.io
         dockerfile: my-docker-actions/Dockerfile
         username: ${{ secrets.DOCKERHUB_USER }}
