@@ -39,7 +39,7 @@ jobs:
       name: Build & publish Docker image to GitHub Packages
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
-        tags: $APP_VERSION
+        tags: ${{ env.APP_VERSION }}
         registry: docker.pkg.github.com
         dockerfile: my-docker-actions/Dockerfile
         username: ${{ github.actor }}
@@ -48,7 +48,7 @@ jobs:
       name: Build & publish Docker image to GHCR
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
-        tags: $APP_VERSION
+        tags: ${{ env.APP_VERSION }}
         registry: ghcr.io
         dockerfile: my-docker-actions/Dockerfile
         username: ${{ github.actor }}
