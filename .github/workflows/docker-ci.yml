@@ -112,8 +112,8 @@ jobs:
     - name: Deploy to Staging
       if: ${{ github.event_name == 'push' }}
       run: |
-      echo "This event is a push to master by $OWNER and application is deployed to $SERVER"
-      echo "Staging env secret.... ${{ secrets.STAG_VALUE }}"
+        echo "This event is a push to master by $OWNER and application is deployed to $SERVER"
+        echo "Staging env secret.... ${{ secrets.STAG_VALUE }}"
     - name: Testing outputs
       run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
 
@@ -130,5 +130,5 @@ jobs:
       run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
     - name: Testing outputs
       run: |
-      echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
-      echo "Staging env secret.... ${{ secrets.PROD_VALUE }}"
+        echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+        echo "Staging env secret.... ${{ secrets.PROD_VALUE }}"
