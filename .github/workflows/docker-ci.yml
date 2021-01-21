@@ -5,7 +5,7 @@ on:
     types: [published]
   push:
     paths:
-    - 'others/**'
+    - 'my-docker-actions/**'
     - '.github/workflows/docker-ci.yml'
   #   branches: [ master, main ]
   #   tags:
@@ -18,6 +18,7 @@ on:
 env:
   SERVER: production
   OWNER: UMA_SURYA
+  APP_VERSION: 0.0.5
 
 jobs:
   build: #JOB ID - must be unique
@@ -29,31 +30,35 @@ jobs:
       name: Build & push Docker image to DokerHub
       with:
         repository: surya407/test
-        tags: 0.0.4
+        tags: $APP_VERSION
         registry: docker.io
-        dockerfile: others/Dockerfile
+        dockerfile: my-docker-actions/Dockerfile
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - uses: docker/build-push-action@v1
       name: Build & publish Docker image to GitHub Packages
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
-        tags: 0.0.4
+        tags: $APP_VERSION
         registry: docker.pkg.github.com
-        dockerfile: others/Dockerfile
+        dockerfile: my-docker-actions/Dockerfile
         username: ${{ github.actor }}
         password: ${{ secrets.MYGITHUB_TOKEN }}
     - uses: docker/build-push-action@v1
       name: Build & publish Docker image to GHCR
       with:
         repository: umasuryasai/ci-cd-testing/myhttpd
-        tags: 0.0.4
+        tags: $APP_VERSION
         registry: ghcr.io
-        dockerfile: others/Dockerfile
+        dockerfile: my-docker-actions/Dockerfile
         username: ${{ github.actor }}
         password: ${{ secrets.MYGITHUB_TOKEN }}
+
+    ##################
+    # ADDITONAL CODE #
+    ##################
     # - name: Build the Docker image
-    #   run: docker build . --file others/Dockerfile --tag surya407/test:v5
+    #   run: docker build . --file my-docker-actions/Dockerfile --tag surya407/test:v5
     # - name: Login to DockerHub
     #   uses: docker/login-action@v1 
     #   with:
@@ -70,7 +75,7 @@ jobs:
     #     image: umasuryasai/ci-cd-testing/myhttpd
     #     tags: 0.0.2
     #     registry: ghcr.io #docker.pkg.github.com
-    #     dockerfile: others/Dockerfile
+    #     dockerfile: my-docker-actions/Dockerfile
     #     username: ${{ secrets.MYGITHUB_USER }}
     #     password: ${{ secrets.MYGITHUB_TOKEN }}
 
@@ -96,14 +101,34 @@ jobs:
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
 
-  deploy:
+  staging:
     name: Deploy the app
+    environment:
+      name: staging
     if: always() #means it always runs after jobs build and scan have completed, regardless of whether they were successful.
     needs: [build, scan]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to Staging
+      if: ${{ github.event_name == 'push' }}
+      run: |
+      echo "This event is a push to master by $OWNER and application is deployed to $SERVER"
+      echo "Staging env secret.... ${{ secrets.STAG_VALUE }}"
+    - name: Testing outputs
+      run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+
+
+  production:
+    name: Deploy the app
+    environment:
+      name: production
+    needs: staging
     runs-on: ubuntu-latest
     steps:
     - name: Deploy to Prod
       if: ${{ github.event_name == 'push' }}
       run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
     - name: Testing outputs
-      run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+      run: |
+      echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+      echo "Staging env secret.... ${{ secrets.PROD_VALUE }}"
