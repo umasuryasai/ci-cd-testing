@@ -18,7 +18,7 @@ on:
 env:
   SERVER: production
   OWNER: UMA_SURYA
-  APP_VERSION: 0.0.5
+  APP_VERSION: '0.0.5'
 
 jobs:
   build: #JOB ID - must be unique
