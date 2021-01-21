@@ -73,7 +73,7 @@ jobs:
     #   # for ghcr, we need to enable improved-container-support in settings
     #   with:
     #     image: umasuryasai/ci-cd-testing/myhttpd
-    #     tags: 0.0.2
+    #     tags: $APP_VERSION
     #     registry: ghcr.io #docker.pkg.github.com
     #     dockerfile: my-docker-actions/Dockerfile
     #     username: ${{ secrets.MYGITHUB_USER }}
@@ -102,7 +102,7 @@ jobs:
       output2: ${{ steps.step2.outputs.test }}
 
   staging:
-    name: Deploy the app
+    name: Staging Deploy
     environment:
       name: staging
     if: always() #means it always runs after jobs build and scan have completed, regardless of whether they were successful.
@@ -119,7 +119,7 @@ jobs:
 
 
   production:
-    name: Deploy the app
+    name: Production Deploy
     environment:
       name: production
     needs: staging
