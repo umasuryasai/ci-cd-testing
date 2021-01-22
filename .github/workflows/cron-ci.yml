@@ -8,7 +8,7 @@ on:
 
 env:
   OWNER: UMA_SURYA
-  APP_VERSION: v3
+  APP_VERSION: v4
 
 defaults:
   run:
@@ -16,6 +16,7 @@ defaults:
 
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Build and tag the Docker Image
     runs-on: ubuntu-latest
     steps:
