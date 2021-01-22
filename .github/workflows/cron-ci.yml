@@ -7,7 +7,7 @@ on:
     - '.github/workflows/cron-ci.yml'
 
 env:
-  OWNER: UMA_SURYA
+  OWNER: UMA_SURYA_SAI
   APP_VERSION: v4
 
 defaults:
@@ -16,7 +16,7 @@ defaults:
 
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    if: "!contains(github.event.head_commit.message, '** skip ci **')"
     name: Build and tag the Docker Image
     runs-on: ubuntu-latest
     steps:
