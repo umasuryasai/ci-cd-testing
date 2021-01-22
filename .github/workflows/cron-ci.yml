@@ -16,13 +16,16 @@ defaults:
 
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    if: "!contains(github.event.head_commit.message, 'surya')"
     name: Build and tag the Docker Image
     runs-on: ubuntu-latest
     steps:
     - name: Chekout
       run: echo "hello"
     #   uses: actions/checkout@v2
+    # - name: Set up QEMU
+    #   #This allows us to build images targeted at more than one platform and also build Arm images.
+    #   uses: docker/setup-qemu-action@v1
     # - name: Set up Docker Buildx
     #   uses: docker/setup-buildx-action@v1
     # - name: Login to Docker Hub
