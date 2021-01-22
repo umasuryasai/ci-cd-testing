@@ -20,29 +20,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: |
-        ls -al
-        cat crontab
-    - uses: docker/build-push-action@v1
-      name: Build & push Docker image to DokerHub
-      # with:
-      #   push: true
-      #   tags: my-ecr-repo/service
-      #   context: service
-      #   file: service/Dockerfile
-      with:
-        repository: surya407/cron-test
-        tags: ${{ env.APP_VERSION }}
-        registry: docker.io
-        path: my-cron-actions
-        username: ${{ secrets.DOCKERHUB_USER }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
     # - uses: docker/build-push-action@v1
-    #   name: Build & publish Docker image to GitHub Packages
+    #   name: Build & push Docker image to DokerHub
     #   with:
-    #     repository: umasuryasai/ci-cd-testing/cron-test
+    #     repository: surya407/cron-test
     #     tags: ${{ env.APP_VERSION }}
-    #     registry: docker.pkg.github.com
-    #     dockerfile: Dockerfile
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.MYGITHUB_TOKEN }}
+    #     registry: docker.io
+    #     path: my-cron-actions
+    #     username: ${{ secrets.DOCKERHUB_USER }}
+    #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - uses: docker/build-push-action@v1
+      name: Build & publish Docker image to GitHub Packages
+      with:
+        repository: umasuryasai/ci-cd-testing/cron-test
+        tags: ${{ env.APP_VERSION }}
+        registry: docker.pkg.github.com
+        path: my-cron-actions
+        username: ${{ github.actor }}
+        password: ${{ secrets.MYGITHUB_TOKEN }}
+    # - uses: docker/build-push-action@v2
+    #   name: Build & push Docker image to DokerHub
+    #   with:
+    #     push: true
+    #     tags: surya407/cron-test:${{ env.APP_VERSION }}
+    #     registry: docker.io
+    #     context: my-cron-actions
+    #     username: ${{ secrets.DOCKERHUB_USER }}
+    #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
