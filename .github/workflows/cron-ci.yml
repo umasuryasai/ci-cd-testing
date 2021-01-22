@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: |
+        ls -al
+        env
     - uses: docker/build-push-action@v1
       name: Build & push Docker image to DokerHub
       with:
