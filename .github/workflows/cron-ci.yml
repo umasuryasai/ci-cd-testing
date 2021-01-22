@@ -47,8 +47,8 @@ jobs:
         tags: |
           surya407/cron-test:${{ env.APP_VERSION }}
           surya407/cron-test:latest
-          umasuryasai/ci-cd-testing/cron-test:${{ env.APP_VERSION }}
-          umasuryasai/ci-cd-testing/cron-test:latest
+          umasuryasai/ci-cd-testing/cron-java-test:${{ env.APP_VERSION }}
+          umasuryasai/ci-cd-testing/cron-java-test:latest
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 
