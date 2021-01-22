@@ -35,7 +35,7 @@ jobs:
     - name: Login to GitHub Docker packages
       uses: docker/login-action@v1 
       with:
-        registry: docker.pkg.github.com
+        registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.MYGITHUB_TOKEN }}
     - uses: docker/build-push-action@v2
@@ -47,8 +47,8 @@ jobs:
         tags: |
           surya407/cron-test:${{ env.APP_VERSION }}
           surya407/cron-test:latest
-          umasuryasai/ci-cd-testing/cron-java-test:${{ env.APP_VERSION }}
-          umasuryasai/ci-cd-testing/cron-java-test:latest
+          ghcr.io/umasuryasai/cron-test:${{ env.APP_VERSION }}
+          ghcr.io/umasuryasai/cron-test:latest
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 
