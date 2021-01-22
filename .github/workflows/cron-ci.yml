@@ -1,0 +1,39 @@
+name: Cron CI
+
+on:
+  push:
+    paths:
+    - 'my-cron-actions/**'
+    - '.github/workflows/cron-ci.yml'
+
+env:
+  OWNER: UMA_SURYA
+  APP_VERSION: v1
+
+jobs:
+  build: #JOB ID - must be unique
+    name: Build and tag the Docker Image # JOB NAME - It is displayed on Github
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my-cron-actions
+    steps:
+    - uses: actions/checkout@v2
+    - uses: docker/build-push-action@v1
+      name: Build & push Docker image to DokerHub
+      with:
+        repository: surya407/cron-test
+        tags: ${{ env.APP_VERSION }}
+        registry: docker.io
+        dockerfile: my-cron-actions/Dockerfile
+        username: ${{ secrets.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - uses: docker/build-push-action@v1
+      name: Build & publish Docker image to GitHub Packages
+      with:
+        repository: umasuryasai/ci-cd-testing/cron-test
+        tags: ${{ env.APP_VERSION }}
+        registry: docker.pkg.github.com
+        dockerfile: my-cron-actions/Dockerfile
+        username: ${{ github.actor }}
+        password: ${{ secrets.MYGITHUB_TOKEN }}
