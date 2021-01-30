@@ -18,10 +18,12 @@ on:
 env:
   SERVER: production
   OWNER: UMA_SURYA
-  APP_VERSION: v5
+  APP_VERSION: v1
+  IMAGE_NAME: alpine-nginx
 
 jobs:
   build: #JOB ID - must be unique
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Build and tag the Docker Image # JOB NAME - It is displayed on Github
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +31,7 @@ jobs:
     - uses: docker/build-push-action@v1
       name: Build & push Docker image to DokerHub
       with:
-        repository: surya407/test
+        repository: surya407/${{ env.IMAGE_NAME }}
         tags: ${{ env.APP_VERSION }}
         registry: docker.io
         dockerfile: my-docker-actions/Dockerfile
@@ -38,7 +40,7 @@ jobs:
     - uses: docker/build-push-action@v1
       name: Build & publish Docker image to GitHub Packages
       with:
-        repository: umasuryasai/ci-cd-testing/myhttpd
+        repository: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
         tags: ${{ env.APP_VERSION }}
         registry: docker.pkg.github.com
         dockerfile: my-docker-actions/Dockerfile
@@ -47,7 +49,7 @@ jobs:
     - uses: docker/build-push-action@v1
       name: Build & publish Docker image to GHCR
       with:
-        repository: umasuryasai/ci-cd-testing/myhttpd
+        repository: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
         tags: ${{ env.APP_VERSION }}
         registry: ghcr.io
         dockerfile: my-docker-actions/Dockerfile
@@ -58,7 +60,7 @@ jobs:
     # ADDITONAL CODE #
     ##################
     # - name: Build the Docker image
-    #   run: docker build . --file my-docker-actions/Dockerfile --tag surya407/test:v5
+    #   run: docker build . --file my-docker-actions/Dockerfile --tag surya407/${{ env.IMAGE_NAME }}:v5
     # - name: Login to DockerHub
     #   uses: docker/login-action@v1 
     #   with:
@@ -67,12 +69,12 @@ jobs:
     # - name: Look up images
     #   run: docker image ls
     # - name: Push image
-    #   run: docker push surya407/test:v5
+    #   run: docker push surya407/${{ env.IMAGE_NAME }}:v5
     # - uses: mr-smithers-excellent/docker-build-push@v5
     #   name: Build & publish Docker image to GHCR
     #   # for ghcr, we need to enable improved-container-support in settings
     #   with:
-    #     image: umasuryasai/ci-cd-testing/myhttpd
+    #     image: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
     #     tags: $APP_VERSION
     #     registry: ghcr.io #docker.pkg.github.com
     #     dockerfile: my-docker-actions/Dockerfile
@@ -80,6 +82,7 @@ jobs:
     #     password: ${{ secrets.MYGITHUB_TOKEN }}
 
   scan:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Scan the image
     env: 
       NAME: surya
@@ -93,15 +96,16 @@ jobs:
       run: echo "Scan Passed/Failed/Vulnerable... $NAME $SURNAME"
     - id: step1
       name: Test output1
-      run: echo "::set-output name=test::hello"
+      run: echo "::set-output name=${{ env.IMAGE_NAME }}::hello"
     - id: step2
       name: Test output2
-      run: echo "::set-output name=test::surya"
+      run: echo "::set-output name=${{ env.IMAGE_NAME }}::surya"
     outputs:
-      output1: ${{ steps.step1.outputs.test }}
-      output2: ${{ steps.step2.outputs.test }}
+      output1: ${{ steps.step1.outputs.${{ env.IMAGE_NAME }} }}
+      output2: ${{ steps.step2.outputs.${{ env.IMAGE_NAME }} }}
 
   staging:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Staging Deploy
     environment:
       name: staging
@@ -119,6 +123,7 @@ jobs:
 
 
   production:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Production Deploy
     environment:
       name: production

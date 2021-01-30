@@ -1,0 +1,12 @@
+version: '3'
+services:
+  nginx_master:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: nginx_master
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html
+    
+  database:
+    image: redis
