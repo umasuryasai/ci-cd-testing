@@ -37,103 +37,103 @@ jobs:
         dockerfile: my-docker-actions/Dockerfile
         username: ${{ secrets.DOCKERHUB_USER }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - uses: docker/build-push-action@v1
-      name: Build & publish Docker image to GitHub Packages
-      with:
-        repository: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
-        tags: ${{ env.APP_VERSION }}
-        registry: docker.pkg.github.com
-        dockerfile: my-docker-actions/Dockerfile
-        username: ${{ github.actor }}
-        password: ${{ secrets.MYGITHUB_TOKEN }}
-    - uses: docker/build-push-action@v1
-      name: Build & publish Docker image to GHCR
-      with:
-        repository: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
-        tags: ${{ env.APP_VERSION }}
-        registry: ghcr.io
-        dockerfile: my-docker-actions/Dockerfile
-        username: ${{ github.actor }}
-        password: ${{ secrets.MYGITHUB_TOKEN }}
-
-    ##################
-    # ADDITONAL CODE #
-    ##################
-    # - name: Build the Docker image
-    #   run: docker build . --file my-docker-actions/Dockerfile --tag surya407/${{ env.IMAGE_NAME }}:v5
-    # - name: Login to DockerHub
-    #   uses: docker/login-action@v1 
+    # - uses: docker/build-push-action@v1
+    #   name: Build & publish Docker image to GitHub Packages
     #   with:
-    #     username: ${{ secrets.DOCKERHUB_USER }}
-    #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    # - name: Look up images
-    #   run: docker image ls
-    # - name: Push image
-    #   run: docker push surya407/${{ env.IMAGE_NAME }}:v5
-    # - uses: mr-smithers-excellent/docker-build-push@v5
-    #   name: Build & publish Docker image to GHCR
-    #   # for ghcr, we need to enable improved-container-support in settings
-    #   with:
-    #     image: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
-    #     tags: $APP_VERSION
-    #     registry: ghcr.io #docker.pkg.github.com
+    #     repository: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
+    #     tags: ${{ env.APP_VERSION }}
+    #     registry: docker.pkg.github.com
     #     dockerfile: my-docker-actions/Dockerfile
-    #     username: ${{ secrets.MYGITHUB_USER }}
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.MYGITHUB_TOKEN }}
+    # - uses: docker/build-push-action@v1
+    #   name: Build & publish Docker image to GHCR
+    #   with:
+    #     repository: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
+    #     tags: ${{ env.APP_VERSION }}
+    #     registry: ghcr.io
+    #     dockerfile: my-docker-actions/Dockerfile
+    #     username: ${{ github.actor }}
     #     password: ${{ secrets.MYGITHUB_TOKEN }}
 
-  scan:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    name: Scan the image
-    env: 
-      NAME: surya
-      SURNAME: borusu
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Start scan
-      run: echo "Scan started... $NAME"
-    - name: Display results
-      run: echo "Scan Passed/Failed/Vulnerable... $NAME $SURNAME"
-    - id: step1
-      name: Test output1
-      run: echo "::set-output name=${{ env.IMAGE_NAME }}::hello"
-    - id: step2
-      name: Test output2
-      run: echo "::set-output name=${{ env.IMAGE_NAME }}::surya"
-    outputs:
-      output1: ${{ steps.step1.outputs.${{ env.IMAGE_NAME }} }}
-      output2: ${{ steps.step2.outputs.${{ env.IMAGE_NAME }} }}
+  #   ##################
+  #   # ADDITONAL CODE #
+  #   ##################
+  #   # - name: Build the Docker image
+  #   #   run: docker build . --file my-docker-actions/Dockerfile --tag surya407/${{ env.IMAGE_NAME }}:v5
+  #   # - name: Login to DockerHub
+  #   #   uses: docker/login-action@v1 
+  #   #   with:
+  #   #     username: ${{ secrets.DOCKERHUB_USER }}
+  #   #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #   # - name: Look up images
+  #   #   run: docker image ls
+  #   # - name: Push image
+  #   #   run: docker push surya407/${{ env.IMAGE_NAME }}:v5
+  #   # - uses: mr-smithers-excellent/docker-build-push@v5
+  #   #   name: Build & publish Docker image to GHCR
+  #   #   # for ghcr, we need to enable improved-container-support in settings
+  #   #   with:
+  #   #     image: umasuryasai/ci-cd-testing/${{ env.IMAGE_NAME }}
+  #   #     tags: $APP_VERSION
+  #   #     registry: ghcr.io #docker.pkg.github.com
+  #   #     dockerfile: my-docker-actions/Dockerfile
+  #   #     username: ${{ secrets.MYGITHUB_USER }}
+  #   #     password: ${{ secrets.MYGITHUB_TOKEN }}
 
-  staging:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    name: Staging Deploy
-    environment:
-      name: staging
-    if: always() #means it always runs after jobs build and scan have completed, regardless of whether they were successful.
-    needs: [build, scan]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy to Staging
-      if: ${{ github.event_name == 'push' }}
-      run: |
-        echo "This event is a push to master by $OWNER and application is deployed to $SERVER"
-        echo "Staging env secret.... ${{ secrets.STAG_VALUE }}"
-    - name: Testing outputs
-      run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+  # scan:
+  #   if: "!contains(github.event.head_commit.message, 'skip ci')"
+  #   name: Scan the image
+  #   env: 
+  #     NAME: surya
+  #     SURNAME: borusu
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Start scan
+  #     run: echo "Scan started... $NAME"
+  #   - name: Display results
+  #     run: echo "Scan Passed/Failed/Vulnerable... $NAME $SURNAME"
+  #   - id: step1
+  #     name: Test output1
+  #     run: echo "::set-output name=${{ env.IMAGE_NAME }}::hello"
+  #   - id: step2
+  #     name: Test output2
+  #     run: echo "::set-output name=${{ env.IMAGE_NAME }}::surya"
+  #   outputs:
+  #     output1: ${{ steps.step1.outputs.${{ env.IMAGE_NAME }} }}
+  #     output2: ${{ steps.step2.outputs.${{ env.IMAGE_NAME }} }}
+
+  # staging:
+  #   if: "!contains(github.event.head_commit.message, 'skip ci')"
+  #   name: Staging Deploy
+  #   environment:
+  #     name: staging
+  #   if: always() #means it always runs after jobs build and scan have completed, regardless of whether they were successful.
+  #   needs: [build, scan]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Deploy to Staging
+  #     if: ${{ github.event_name == 'push' }}
+  #     run: |
+  #       echo "This event is a push to master by $OWNER and application is deployed to $SERVER"
+  #       echo "Staging env secret.... ${{ secrets.STAG_VALUE }}"
+  #   - name: Testing outputs
+  #     run: echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
 
 
-  production:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    name: Production Deploy
-    environment:
-      name: production
-    needs: staging
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy to Prod
-      if: ${{ github.event_name == 'push' }}
-      run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
-    - name: Testing outputs
-      run: |
-        echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
-        echo "Staging env secret.... ${{ secrets.PROD_VALUE }}"
+  # production:
+  #   if: "!contains(github.event.head_commit.message, 'skip ci')"
+  #   name: Production Deploy
+  #   environment:
+  #     name: production
+  #   needs: staging
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Deploy to Prod
+  #     if: ${{ github.event_name == 'push' }}
+  #     run: echo "This event is a push to master by $OWNER and application is deployed to $SERVER".
+  #   - name: Testing outputs
+  #     run: |
+  #       echo ${{needs.scan.outputs.output1}} ${{needs.scan.outputs.output2}}
+  #       echo "Staging env secret.... ${{ secrets.PROD_VALUE }}"
