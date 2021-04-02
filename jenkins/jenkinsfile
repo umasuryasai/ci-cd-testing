@@ -1,20 +1,49 @@
-pipeline { 
-agent any 
-    stages { 
-        stage ('Build Java Image') { 
-            steps{
-                echo "Building docker image for Java springboot application"
+pipeline {
+    agent any 
+    parameters {
+        string(name: 'DOCKER_TAG', defaultValue: 'ignore', description: 'tag for the docker image')
+    }
+    environment {
+        registry = "surya407/sample-nodejs"
+        registryCredential = 'dockerhub_id'
+        dockerImage = ''
+        dockerHome = ''
+    }
+    
+    
+    stages {
+        stage('Initialize'){
+        steps {
+                def dockerHome = tool 'myDocker'
+                env.PATH = "${dockerHome}/bin:${env.PATH}"                }
+        }
+        // stage('Initialize') {
+        //     steps{
+        //         def dockerHome = tool 'mydocker'
+        //         env.PATH = "${dockerHome}/bin:${env.PATH}"
+        //     }
+        // }
+
+        stage('Clone Git') {
+            steps {
+                git 'https://github.com/umasuryasai/ci-cd-testing.git'
             }
         }
-        stage ('Build Python Image') { 
-            steps{
-                echo "Building docker image for python application"
-            }        
-        }
-        stage ('Deploy') { 
-            steps{
-                echo "Deploying into kubernetes"
-            }    
-        }
-    }           
- }
+
+        stage('Build and push Docker image') {
+            steps {
+                dir('node-js-docker') {
+                    sh "pwd"
+                    sh "ls -al"
+                    script {
+                        dockerImage = docker.build registry + ":${params.DOCKER_TAG}"
+                        echo $dockerImage
+                        docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                        }
+                    }
+                }
+            }
+        }    
+    }
+}
