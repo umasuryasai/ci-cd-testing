@@ -22,7 +22,7 @@ def index():
 
 @app.route("/hi/")
 def who():
-    return "Who are you??"
+    return "Where are you??"
 
 @app.route("/hi/<username>")
 def great(username):
