@@ -1,0 +1,39 @@
+# Default values for employees.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+prometheus:
+  enabled: false
+
+replicaCount: 1
+
+javaImage:
+  repository: surya407/emp-java
+  pullPolicy: IfNotPresent
+  tag: v0.1
+  port: 80
+
+pythonImage:
+  repository: surya407/hello-python
+  pullPolicy: IfNotPresent
+  tag: v0.2
+  port: 5001
+
+# podAnnotations: {
+#     prometheus.io/scrape: "true",
+#     prometheus.io/path: /metrics,
+#     prometheus.io/port: "8080",
+# }
+
+javaService:
+  type: NodePort
+  port: 31956
+
+pythonService:
+  type: ClusterIP
+  port: 5001
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "employees.fullname" . }}-python
+  labels:
+    app: {{ include "employees.name" . }}-python
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ include "employees.name" . }}-python
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ include "employees.name" . }}-python
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-python
+          image: "{{ .Values.pythonImage.repository }}:{{ .Values.pythonImage.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.pythonImage.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.pythonImage.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.pythonImage.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.pythonImage.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 3

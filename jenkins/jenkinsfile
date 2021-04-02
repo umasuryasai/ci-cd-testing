@@ -1,0 +1,20 @@
+pipeline { 
+agent any 
+    stages { 
+        stage ('Build Java Image') { 
+            steps{
+                echo "Building docker image for Java springboot application"
+            }
+        }
+        stage ('Build Python Image') { 
+            steps{
+                echo "Building docker image for python application"
+            }        
+        }
+        stage ('Deploy') { 
+            steps{
+                echo "Deploying into kubernetes"
+            }    
+        }
+    }           
+ }

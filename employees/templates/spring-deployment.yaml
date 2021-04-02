@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "employees.fullname" . }}-java
+  labels:
+    app: {{ include "employees.name" . }}-java
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ include "employees.name" . }}-java
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ include "employees.name" . }}-java
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-java
+          image: "{{ .Values.javaImage.repository }}:{{ .Values.javaImage.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.javaImage.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.javaImage.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /employees/
+              port: {{ .Values.javaImage.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /employees/
+              port: {{ .Values.javaImage.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 3

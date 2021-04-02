@@ -1,0 +1,29 @@
+Helm: https://www.ibm.com/cloud/architecture/content/course/helm-fundamentals/values-yaml/
+Prometheus-stack-github: https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+Prometheus-stack-artifact: https://artifacthub.io/packages/helm/prometheus-community/prometheus
+Prometheus TimeSeriesDatabase(TSDB): https://ganeshvernekar.com/blog/prometheus-tsdb-the-head-block/
+
+HELM COMMANDS
+
+helm template employees --debug
+It will do the validation and generate the YAML manifest
+but it can not guarantee that generated kubernetes resource(YAMLs) is valid or not.
+
+helm install --dry-run --debug
+It will validate and verify your chart by connecting to kubernetes api server 
+and after successful validation it will render the manifest in the form of YAMLs(kubernetes resources)
+
+DOCKER COMMANDS
+
+docker rmi $(docker images -f dangling=true -q)
+docker rm $(docker ps -a -f status=exited -q)
+
+surya_jenkins_home: 97f6dad94aee435aa4cc4b02d8ef3553
+
+
+codecommit:
+https://www.youtube.com/watch?v=mszE-OCI2V4
+
+
+Jenkins for Docker:
+https://www.youtube.com/watch?v=UTziA84ynvo
