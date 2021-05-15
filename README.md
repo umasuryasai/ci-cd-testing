@@ -1,2 +1,2 @@
 # ci-cd-testing
-A repo for better understanding of ci/cd implementation using GitHub Actions
+A repo for better understanding of CI/CD implementation using GitHub-Actions
