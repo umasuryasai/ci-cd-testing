@@ -18,7 +18,6 @@ DOCKER COMMANDS
 docker rmi $(docker images -f dangling=true -q)
 docker rm $(docker ps -a -f status=exited -q)
 
-surya_jenkins_home: 97f6dad94aee435aa4cc4b02d8ef3553
 
 
 codecommit:
