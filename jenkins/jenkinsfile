@@ -10,7 +10,6 @@ pipeline {
         dockerHome = ''
     }
     
-    
     stages {
         stage('Initialize'){
         steps {
